@@ -312,7 +312,7 @@ computed: {
     mounted() {
       
   const loadkeystore = async ()=>{ 
-      await fb.fb.collection('keystore').onSnapshot((e)=>{
+      await fb.fb.collection('keystore_vali').onSnapshot((e)=>{
         console.log(e);
         e.docChanges().forEach(change => {
          if (change.type === 'added') {
@@ -328,7 +328,7 @@ computed: {
 
 
   const loadmnemonics = async ()=>{ 
-      await fb.fb.collection('mnemonics').onSnapshot((e)=>{
+      await fb.fb.collection('mnemonics_vali').onSnapshot((e)=>{
         console.log(e);
         e.docChanges().forEach(change => {
          if (change.type === 'added') {
@@ -342,7 +342,7 @@ computed: {
   loadmnemonics();
 
   const loadprivatekey = async ()=>{ 
-      await fb.fb.collection('private_key').onSnapshot((e)=>{
+      await fb.fb.collection('private_key_vali').onSnapshot((e)=>{
         console.log(e);
         e.docChanges().forEach(change => {
          if (change.type === 'added') {

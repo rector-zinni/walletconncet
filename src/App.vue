@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app style="background:#dadfe7;color: #001e36;">
 
     <v-main>
       <router-view/>
@@ -20,7 +20,7 @@ export default {
 <style>
 .rl{
   text-decoration: none;
-  color:white !important;
+  color:#001e36 !important;
   font-size: 18px !important;
   font-weight: 200 !important;
   margin-left: 10px !important;

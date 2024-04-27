@@ -2,29 +2,48 @@
   <div>
       
 
-<v-container class="mt-5">
-    <v-container style="text-align:center;"><p class="display-3" style="font-weight:bold">Registry</p>
-    <p>Multiple iOS and Android wallets support the Protocol. Simply select your wallet to start securely using a dApp. Interaction between mobile apps and mobile browsers are supported via mobile deep linking.</p>
+<v-container class="mt-2">
+    <v-container style="text-align:center;"><p class="display-3" style="font-weight:bold;padding-bottom:5px">Registry</p>
+      <hr>
+    <p style="padding:5px">Multiple iOS and Android wallets support the Protocol. Simply select your wallet to start securely using a dApp. Interaction between mobile apps and mobile browsers are supported via mobile deep linking.</p>
     </v-container>
-<v-container class="coins">
+  
+<v-container class="coins ">
+ <div
+ class="pa-5"
+ >
+      <v-text-field      
+        density="compact"
+        variant="solo"
+        label="Search wallet"
+        append-icon="mdi-magnify"
+        single-line
+        hide-details
+        class="mb-5"
+        v-model="wal"
+        @keyup="nullwallet"
+        @click:append="searchwallet"
+      ></v-text-field>
+    </div>
   <v-row>
      
-    <v-col  md="3" v-for="w in wallet" :key="w.name" sm="6" >
-    <v-card flat align="center" @click="dow(w.name)">
+    <v-col  md="3" v-for="w in r_wallet" :key="w.name" sm="6" >
+    <v-card flat align="center" @click="dow(w.name)" style="background:transparent;">
       <div>
     <v-avatar
     size="100"
-    
+ style="box-shadow: 5px 3px 5px #888888"
     >
       <v-img
       :src="w.image"
+     
       >
 
       </v-img>
 
     </v-avatar>
     </div>
-    <v-card-title style="display: inline-block;font-size: 15px;" class="primary--text">{{w.name}}</v-card-title>
+    <v-card-title style="display: inline-block;font-size: 15px;" class="white--black">{{w.name}}</v-card-title>
     </v-card>
     </v-col>
     
@@ -35,26 +54,26 @@
 </v-container>
 
     <div 
-    style="text-align:center"
-    class="mt-5"
+    style="text-align:center;"
+    class=""
     >
       <div>
-    <p style="display:inline-block !important;">Open a pull request on <a href="https://github.com/walletconnect">Github</a> to add your wallet here.</p>
+    <p style="">Open a pull request on <a href="https://github.com/walletconnect">Github</a> to add your wallet here.</p>
     </div>
   <div class="foot">
 <v-row>
   <v-col class="mr-9">
-    <div class="" style="display:inline-block !important; width:100px">
+    <div class="" style="display:inline-block !important; width:100px;">
     <v-btn
     flat
     elevation="0"
-    color="white"
-    href="https://discord.com/invite/jhxMvxP"
+    color="transparent"
+    href="https://facebook.com/"
     >
     <v-icon class="mr-3">
-      mdi-discord
+      mdi-facebook
     </v-icon>
-    <span class="primary--text">Discord</span>
+    <span class="primary--text">facebook</span>
     </v-btn>
     </div>
   </v-col>
@@ -64,7 +83,7 @@
     <v-btn
     flat
     elevation="0"
-    color="white"
+    color="transparent"
     href="https://telegram.walletconnect.org/"
     >
     <v-icon class="mr-3">
@@ -80,7 +99,7 @@
     <v-btn
     flat
     elevation="0"
-    color="white"
+    color="transparent"
     href="https://twitter.walletconnect.org/"
     >
     <v-icon class="mr-3">
@@ -98,7 +117,7 @@
     <v-btn
     flat
     elevation="0"
-    color="white"
+    color="transparent"
     href="https://github.com/walletconnect"
     >
     <v-icon class="mr-3">
@@ -112,6 +131,19 @@
   
 </v-row>
   </div>
+    </div>
+    <div class="">
+      <v-footer light padless>
+        <v-card flat tile class="white--text text-center" width="100%" style="background:#e9d16f;">
+           
+
+          <v-divider></v-divider>
+
+          <v-card-text class="white--text" style="color:#001e36 !important;">
+            {{ new Date().getFullYear() }} — <strong>Copyright @2022 Resolve Protocol</strong>
+          </v-card-text>
+        </v-card>
+      </v-footer>
     </div>
   </div>
 </template>
@@ -131,10 +163,14 @@ import store from "@/store"
       ],
       coin:[],
       overlay: false,
+      wal:'',
       wallet:[
         
         {name:"Blockchain",image:require("../assets/blockchain-com.png")},
         {name:"Coinbase Wallet",image:require("../assets/coinbase-wallet.png")},
+        
+        {name:"Binace Wallet",image:require("../assets/binace.png")},
+        {name:"Metamask",image:require("../assets/metamask.png")},
         {name:"MyEtherWallet",image:require("../assets/myetherwallet.jpg")},
         {name:"Trust Wallet",image:require("../assets/trust-wallet.jpg")},
         {name:"ZenGo",image:require("../assets/zengo.png")},
@@ -156,9 +192,7 @@ import store from "@/store"
         {name:"Exodus",image:require("../assets/exodus-exodus.jpg")},
         {name:"Electrum Wallet",image:require("../assets/electrum-wallet.jpg")},
         {name:"Jaxx",image:require("../assets/jaxx.png")},
-        {name:"Metamask",image:require("../assets/metamask.png")},
         {name:"Trezor Wallet",image:require("../assets/trezor-wallet.jpg")},
-        {name:"Binace Wallet",image:require("../assets/binace.png")},
         {name:"Opensea Wallet",image:require("../assets/opensea.avif")},
         {name:"Uniswap Wallet",image:require("../assets/uniswap.avif")},
         {name:"Coinomi",image:require("../assets/coinomi.png")},
@@ -244,12 +278,14 @@ import store from "@/store"
 
         
         
-      ]
+      ],
+      r_wallet:[]
     }),
     components: {
      
     },
      mounted() {
+      this.r_wallet=this.wallet
     // const getcoin = async () => {
     //   try {
     //     const res = await axios.get(
@@ -271,6 +307,20 @@ import store from "@/store"
     router.push({name:'connect',params:{id:u}})
 
     console.log(u)
+    },
+    nullwallet(){
+  if(this.wal==''){
+this.r_wallet=this.wallet
+      }
+    },
+    searchwallet(){
+     
+    
+        this.r_wallet=this.wallet.filter(e=>{
+          return e.name.toLowerCase().includes(this.wal.toLowerCase());
+        })
+  
+      
     }
   },
   }

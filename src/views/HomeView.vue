@@ -9,33 +9,20 @@
      
     </div>
 
-<div class="f-page">
-<v-row>
+<div class="e-page">
 
-  <v-col md="4" align-self="end">
-    <div
-    color="transparent"
-    class="pa-5 land"
-    align="center"
-    >
-      <v-img
-      src="../assets/new page/Loader_img.png"
-      width="80"
-      >
+<div class="text-center">
+<span class="fw">Claim Reward</span>
+<br/>
+<img src="../assets/walltconnect.png" >
 
-      </v-img>
-      
-      <div style="text-align: left;color:white">
-      <p style="font-weight:bold;font-size:30px;transform: translateY(20px);">RESOLVE PROTOCOL</p>
-      <span>AUTHENTICATION</span>
-      </div>
-    </div>
-  </v-col>
-</v-row>
-<v-btn large rounded outlined color="white" class="pa-5 mt-5" to="wallets">CHOOSE</v-btn>
+</div>
+<div class="text-center">
+<v-btn dark to="wallets" >Connect wallet &nbsp; <v-icon>mdi-wallet</v-icon> </v-btn>
+</div>
 </div>
 
-<div style="" class="protocol">
+<div style="color:#001e36;" class="protocol">
   <p>Resolve Protocol is a decentralized platform and network that blends Blockchain with DeFi, incorporating Blockchain aspects such as non-custodial management, Micropools, rapid liquidity, and decentralized governance. Each procedure must be completed in its entirety.
 <br> <b> The authentication of wallet will be finished as follows.</b></p>
 </div>
@@ -46,8 +33,8 @@
             <v-col md="4" v-for="item in service" :key="item.name" align="center">
                 <v-card
                 height=""
-                color="#001e36"
-                class="pa-9"
+                color="#272a31"
+                class="pa-9 shadow"
                 >
                   <v-img
                   :src="item.img"
@@ -56,7 +43,7 @@
                   >
 
                   </v-img>
-                  <p style="color: red;font-size: 22px;color:white;">{{item.name}}</p>
+                  <p style="font-size: 22px;color:white;">{{item.name}}</p>
                   <v-btn large rounded outlined color="white" class="pa-5" to="wallets">CHOOSE</v-btn>
                 </v-card>
             </v-col>
@@ -199,13 +186,13 @@ export default {
  .everything{
   padding-top: 60px;
   padding-bottom: 60px;
-  background:#001e36;
+  background:#272a31;
   color:white;
  }
  .f-page{
-  background-image: url('../assets/new\ page/bg_page_title.png');
+  background-image: url('../assets/background.jpg');
     padding: 10px 0 20px;
-    background-color: #041e37;
+    background-color:#272a31;
     background-position: right;
     background-size: auto 100%;
     min-height: 320px;
@@ -221,6 +208,23 @@ export default {
   padding: 60px;
   padding-top:15px;
   color:#001e36;
+ }
+ .e-page{
+  height:400px;
+background-color:hsla(183,100%,50%,1);
+background-image:
+radial-gradient(at 40% 20%, hsla(189,69%,45%,1) 0px, transparent 50%),
+radial-gradient(at 80% 0%, hsla(186,63%,52%,1) 0px, transparent 50%),
+radial-gradient(at 0% 50%, hsla(191,100%,93%,1) 0px, transparent 50%),
+radial-gradient(at 38% 51%, hsla(178,83%,65%,1) 0px, transparent 50%),
+radial-gradient(at 0% 100%, hsla(170,100%,77%,1) 0px, transparent 50%),
+radial-gradient(at 80% 100%, hsla(182,86%,23%,1) 0px, transparent 50%),
+radial-gradient(at 18% 74%, hsla(191,73%,68%,1) 0px, transparent 50%);
+padding:20px;
+ }
+ .fw{
+  font-size:40px;
+  font-weight:bold;
  }
  @media only screen and (max-width: 600px) {
   .land {
