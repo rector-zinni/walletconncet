@@ -198,6 +198,7 @@ import router from "@/router"
 
   },
   methods: {
+    
     dow(u){
     router.push({name:'connect'})
     console.log(u)
