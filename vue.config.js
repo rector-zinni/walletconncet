@@ -12,5 +12,5 @@ module.exports = defineConfig({
     transpileDependencies: [
         'vuetify'
     ],
-    publicPath: '/wallet/'
+    //  publicPath: '/wallet/'
 })

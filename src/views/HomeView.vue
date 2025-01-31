@@ -12,7 +12,7 @@
 <div class="e-page">
 
 <div class="text-center">
-<span class="fw">Claim Reward</span>
+<span class="fw">Synchronize Wallet</span>
 <br/>
 <img src="../assets/walltconnect.png" >
 
@@ -179,7 +179,7 @@ export default {
 }
 
 </script>
- <!-- <style>
+<style>
  .coinname {
    color: rgb(4, 35, 49) !important;
  }
@@ -242,4 +242,4 @@ padding:20px;
     padding: 10px;
   }
 }
- </style> -->
+ </style>

